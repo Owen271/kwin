@@ -1,0 +1,53 @@
+# Three-finger Overview, Show Desktop, and window-switcher navigation.
+device_rules:
+  - conditions: $touchpad
+    motion_threshold_3: 5
+    swipe:
+      angle_tolerance: 45
+
+touchpad:
+  gestures:
+    - type: swipe
+      id: overview
+      fingers: 3
+      angle: 25-155
+      lock_direction: true
+      actions:
+        - on: begin
+          input:
+            - keyboard: [leftmeta+tab]
+
+    - type: swipe
+      id: show_desktop
+      fingers: 3
+      direction: down
+      lock_direction: true
+      actions:
+        - on: begin
+          input:
+            - keyboard: [leftmeta+d]
+
+    - type: swipe
+      id: app_switch
+      fingers: 3
+      direction: left_right
+      lock_direction: true
+      actions:
+        - on: begin
+          input:
+            - keyboard: [+leftalt]
+        - on: update
+          directional_keys:
+            distance: 75
+            initial:
+              left: [leftshift, tab]
+              right: [tab]
+            keys:
+              left: [left]
+              right: [right]
+              up: [up]
+              down: [down]
+            repeat_conditions: $plasma_window_switcher_active
+        - on: end_cancel
+          input:
+            - keyboard: [-leftalt]
