@@ -42,6 +42,9 @@ public:
 protected:
     void registerGlobalVariables(VariableRegistry *variableRegistry, std::shared_ptr<PointerPositionGetter> pointerPositionGetter,
                                  std::shared_ptr<WindowProvider> windowProvider) override;
+
+private:
+    bool m_windowSwitcherActive{};
 };
 
 }

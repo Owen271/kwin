@@ -37,6 +37,12 @@ namespace InputActions
 
 Effect::Effect()
 {
+    KWin::Effect::connect(KWin::effects, &KWin::EffectsHandler::tabBoxAdded, static_cast<KWin::Effect *>(this), [this](int) {
+        m_windowSwitcherActive = true;
+    });
+    KWin::Effect::connect(KWin::effects, &KWin::EffectsHandler::tabBoxClosed, static_cast<KWin::Effect *>(this), [this] {
+        m_windowSwitcherActive = false;
+    });
     g_inputBackend = std::make_unique<KWinInputBackend>();
 
     auto pointer = std::make_shared<KWinPointer>();
@@ -73,6 +79,10 @@ void Effect::registerGlobalVariables(VariableRegistry *variableRegistry, std::sh
                                      std::shared_ptr<WindowProvider> windowProvider)
 {
     InputActionsMain::registerGlobalVariables(variableRegistry);
+
+    variableRegistry->registerComputed<bool>("plasma_window_switcher_active", [this](auto &value) {
+        value = m_windowSwitcherActive;
+    });
 
     // Some of this should be moved to libinputactions eventually
     variableRegistry->registerComputed<bool>("plasma_overview_active", [](auto &value) {
